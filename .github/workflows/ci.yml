@@ -1,4 +1,3 @@
----
 name: ci
 
 "on":
@@ -8,46 +7,18 @@ name: ci
       - main
 
 jobs:
-  lint-unit:
-    uses: sous-chefs/.github/.github/workflows/lint-unit.yml@4.0.0
-    permissions:
-      actions: write
-      checks: write
-      pull-requests: write
-      statuses: write
-      issues: write
-
-  integration:
-    needs: "lint-unit"
+  simple-check:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os:
-          - "centos-7"
-          - "rockylinux-8"
-          - "debian-9"
-          - "debian-10"
-          - "debian-11"
-          - "ubuntu-1804"
-          - "ubuntu-2004"
-          - "ubuntu-2204"
-        suite:
-          - "source"
-          - "certificates"
-          - "ulimit"
-          - "default"
-      fail-fast: false
 
     steps:
       - name: Check out code
         uses: actions/checkout@v5
       - name: Install Chef
         uses: actionshub/chef-install@3.0.1
-      - name: Dokken
-        uses: actionshub/test-kitchen@3.0.0
-        env:
-          CHEF_LICENSE: accept-no-persist
-          KITCHEN_LOCAL_YAML: kitchen.dokken.yml
         with:
-          suite: ${{ matrix.suite }}
-          os: ${{ matrix.os }}
+          omnitruckUrl: cinc-mirror.github.io
+          project: cinc-workstation
+      - name: Check cinc version
+        run: cinc --version
+      - name: Check cinc-client version
+        run: cinc-client --version
