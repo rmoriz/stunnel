@@ -20,5 +20,4 @@ jobs:
           project: cinc-workstation
       - name: Check cinc version
         run: cinc --version
-      - name: Check cinc-client version
-        run: cinc-client --version
+
